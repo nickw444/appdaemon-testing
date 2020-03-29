@@ -9,6 +9,7 @@ appdaemon = "*"
 appdaemon-testing = {editable = true,path = "."}
 black = "*"
 flake8 = "*"
+pdoc3 = "*"
 
 [packages]
 

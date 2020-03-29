@@ -52,9 +52,18 @@ class HassDriver:
         )
 
     def get_mock(self, meth: str) -> mock.Mock:
+        """
+        Returns the mock associated with the provided AppDaemon method
+
+        Parameters:
+            meth: The method to retreive the mock implementation for
+        """
         return self._mocks[meth]
 
-    def inject_mocks(self):
+    def inject_mocks(self) -> None:
+        """
+        Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock implementations.
+        """
         for meth_name, impl in self._mocks.items():
             if getattr(hass.Hass, meth_name) is None:
                 raise AssertionError("Attempt to mock non existing method: ", meth_name)
@@ -63,13 +72,46 @@ class HassDriver:
 
     @contextlib.contextmanager
     def setup(self):
+        """
+        A context manager to indicate that execution is taking place during a "setup" phase.
+
+        This context manager can be used to configure/set up any existing states that might
+        be required to run the test. State changes during execution within this context manager
+        will cause `listen_state` handlers to not be called.
+
+        Example:
+
+        ```py
+        def test_my_app(hass_driver, my_app: MyApp):
+            with hass_driver.setup():
+                # Any registered listen_state handlers will not be called
+                hass_driver.set_state("binary_sensor.motion_detected", "off")
+
+            # Respective listen_state handlers will be called
+            hass_driver.set_state("binary_sensor.motion_detected", "on")
+            ...
+        ```
+        """
         self._setup_active = True
         yield None
         self._setup_active = False
 
     def set_state(
         self, entity, state, *, attribute_name="state", previous=None, trigger=None
-    ):
+    ) -> None:
+        """
+        Update/set state of an entity.
+
+        State changes will cause listeners (via listen_state) to be called on their respective
+        state changes.
+
+        Parameters:
+            entity: The entity to update
+            state: The state value to set
+            attribute_name: The attribute to set
+            previous: Forced previous value
+            trigger: Whether this change should trigger registered listeners (via listen_state)
+        """
         if trigger is None:
             # Avoid triggering state changes during state setup phase
             trigger = not self._setup_active
