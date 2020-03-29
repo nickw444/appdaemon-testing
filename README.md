@@ -7,9 +7,9 @@ Ergonomic and pythonic unit testing for AppDaemon apps. Utilities to allow you t
 pip install appdaemon-testing
 ``` 
 
-## API Documentation
+## Full Documentation
 
-Full API documentation is available [here](https://nickwhyte.com/appdaemon-testing/#header-submodules)
+An enhanced, source-linked version of the documentation below as well as complete [API documentation](https://nickwhyte.com/appdaemon-testing/#header-submodules) is available [here](https://nickwhyte.com/appdaemon-testing/)
 
 ## Writing your first test
 
