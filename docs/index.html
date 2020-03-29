@@ -153,6 +153,8 @@ __all__ = [&#34;HassDriver&#34;]</code></pre>
 <pre><code class="python">class HassDriver:
     def __init__(self):
         self._mocks = dict(
+            log=mock.Mock(),
+            error=mock.Mock(),
             call_service=mock.Mock(),
             cancel_timer=mock.Mock(),
             get_state=mock.Mock(side_effect=self._se_get_state),
