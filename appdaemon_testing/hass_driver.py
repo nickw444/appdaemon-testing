@@ -95,9 +95,9 @@ class HassDriver:
             sat_new = spy.new is None or spy.new == new_value
             sat_old = spy.old is None or spy.old == old_value
 
-            param_old = prev_state if spy.attribute == 'all' else old_value
-            param_new = copy(state_entry) if spy.attribute == 'all' else new_value
-            param_attribute = None if spy.attribute == 'all' else attribute_name
+            param_old = prev_state if spy.attribute == "all" else old_value
+            param_new = copy(state_entry) if spy.attribute == "all" else new_value
+            param_attribute = None if spy.attribute == "all" else attribute_name
 
             if all([sat_old, sat_new, sat_attr]):
                 spy.callback(entity, param_attribute, param_old, param_new, spy.kwargs)
@@ -117,10 +117,14 @@ class HassDriver:
 
         # With matched states, map the provided attribute (if applicable)
         if attribute != "all":
-            matched_states = {eid: state.get(attribute) for eid, state in matched_states.items()}
+            matched_states = {
+                eid: state.get(attribute) for eid, state in matched_states.items()
+            }
 
         if default is not None:
-            matched_states = {eid: state or default for eid, state in matched_states.items()}
+            matched_states = {
+                eid: state or default for eid, state in matched_states.items()
+            }
 
         if fully_qualified:
             return matched_states[entity_id]
