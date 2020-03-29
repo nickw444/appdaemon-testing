@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eu
+
 REPO_DIR="$(git rev-parse --show-toplevel)"
 
 main() {

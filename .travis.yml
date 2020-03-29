@@ -7,3 +7,4 @@ script:
   - flake8 .
   - black --check .
   - pytest
+  - ./bin/check_docs_updated.sh
