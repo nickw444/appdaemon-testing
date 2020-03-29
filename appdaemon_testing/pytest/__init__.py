@@ -4,6 +4,7 @@ from unittest import mock
 
 import appdaemon.plugins.hass.hassapi as hass
 import pytest
+from appdaemon.logging import Logging
 
 from ..hass_driver import HassDriver
 
@@ -39,8 +40,9 @@ def automation_fixture(App: Type[T], args=None, initialize=True):
         @wraps(fn)
         def inner(*_args, **_kwargs) -> T:
             ad = mock.Mock()
-            logging = mock.Mock()
-            app = App(ad, App.__name__, logging, args or {}, {}, {}, {})
+            logging_impl = mock.Mock()
+            logging_impl.log_levels = Logging.log_levels
+            app = App(ad, App.__name__, logging_impl, args or {}, {}, {}, {})
             if initialize:
                 app.initialize()
             fn(*_args, **_kwargs)

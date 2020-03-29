@@ -23,6 +23,8 @@ class StateSpy:
 class HassDriver:
     def __init__(self):
         self._mocks = dict(
+            log=mock.Mock(),
+            error=mock.Mock(),
             call_service=mock.Mock(),
             cancel_timer=mock.Mock(),
             get_state=mock.Mock(side_effect=self._se_get_state),
