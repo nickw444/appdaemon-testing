@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.5" />
+<title>appdaemon_testing API documentation</title>
+<meta name="description" content="appdaemon-testing
+Ergonomic and pythonic unit testing for AppDaemon apps. Utilities to allow you to test your AppDaemon home automation apps using all …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>appdaemon_testing</code></h1>
+</header>
+<section id="section-intro">
+<h1 id="appdaemon-testing">appdaemon-testing</h1>
+<p>Ergonomic and pythonic unit testing for AppDaemon apps. Utilities to allow you to test your AppDaemon home automation apps using all the <em>pythonic</em> testing patterns you are already familiar with.</p>
+<h2 id="install">Install</h2>
+<pre><code class="sh">pip install appdaemon-testing
+</code></pre>
+<h2 id="api-documentation">API Documentation</h2>
+<p>Full API documentation is available <a href="https://nickwhyte.com/appdaemon-testing/#header-submodules">here</a></p>
+<h2 id="writing-your-first-test">Writing your first test</h2>
+<p>This demo assumes you will use <a href="https://docs.pytest.org/en/latest/"><code>pytest</code></a> as your test runner. Install the <code>appdaemon-testing</code> and <a href="https://docs.pytest.org/en/latest/"><code>pytest</code></a> packages:</p>
+<pre><code class="sh">pip install appdaemon-testing pytest
+</code></pre>
+<p>In your <code>appdaemon</code> configuration directory, introduce a new <code>tests</code> directory. This is where we are going to write the tests for your apps.</p>
+<p>Additionally we also need to introduce an <code>__init__.py</code> file to <code>tests</code> and <code>apps</code> directories to make them an importable package. You should have a tree that looks something like this:</p>
+<pre><code>├── appdaemon.yaml
+├── apps
+│   ├── __init__.py
+│   ├── apps.yaml
+│   └── living_room_motion.py
+├── dashboards
+├── namespaces
+└── tests
+    ├── __init__.py
+    └── test_living_room_motion.py
+</code></pre>
+<p>We have an automation, <code>apps/living_room_motion.py</code> that we wish to test. It looks like this:</p>
+<pre><code class="py">import appdaemon.plugins.hass.hassapi as hass
+
+
+class LivingRoomMotion(hass.Hass):
+    def initialize(self):
+        self.listen_state(self.on_motion_detected, self.args[&quot;motion_entity&quot;])
+
+    def on_motion_detected(self, entity, attribute, old, new, kwargs):
+        if old == &quot;off&quot; and new == &quot;on&quot;:
+            for light in self.args[&quot;light_entities&quot;]:
+                self.turn_on(light)
+</code></pre>
+<p>Create a new file, <code>tests/test_living_room_motion.py</code>. This is where we will write the tests for our automation.</p>
+<p>First we will declare an <em><a title="appdaemon_testing.pytest.automation_fixture" href="pytest/index.html#appdaemon_testing.pytest.automation_fixture"><code>automation_fixture()</code></a></em>:</p>
+<pre><code class="py">@automation_fixture(
+    LivingRoomMotion,
+    args={
+        &quot;motion_entity&quot;: &quot;binary_sensor.motion_detected&quot;,
+        &quot;light_entities&quot;: [&quot;light.1&quot;, &quot;light.2&quot;, &quot;light.3&quot;],
+    },
+)
+def living_room_motion() -&gt; LivingRoomMotion:
+    pass
+</code></pre>
+<p>With this fixture, it's now possible to write some tests. We will first write a test to check the state listener callbacks are registered:</p>
+<pre><code class="py">def test_callbacks_are_registered(hass_driver, living_room_motion: LivingRoomMotion):
+    listen_state = hass_driver.get_mock(&quot;listen_state&quot;)
+    listen_state.assert_called_once_with(
+        living_room_motion.on_motion_detected, &quot;binary_sensor.motion_detected&quot;)
+</code></pre>
+<p>We use the <a title="appdaemon_testing.pytest.hass_driver" href="pytest/index.html#appdaemon_testing.pytest.hass_driver"><code>hass_driver()</code></a> fixture to obtain mock implementations of methods that exist on the AppDaemon Hass API. We can query these mocks and make assertions on their values. In this test we make an assertion that <code>listen_state</code> is called once with the specified parameters.</p>
+<p>We will next write a test to make an assertion that the lights are turned on when motion is detected:</p>
+<pre><code class="py">def test_lights_are_turned_on_when_motion_detected(
+    hass_driver, living_room_motion: LivingRoomMotion
+):
+    with hass_driver.setup():
+        hass_driver.set_state(&quot;binary_sensor.motion_detected&quot;, &quot;off&quot;)
+
+    hass_driver.set_state(&quot;binary_sensor.motion_detected&quot;, &quot;on&quot;)
+
+    turn_on = hass_driver.get_mock(&quot;turn_on&quot;)
+    assert turn_on.call_count == 3
+    turn_on.assert_has_calls(
+        [mock.call(&quot;light.1&quot;), mock.call(&quot;light.2&quot;), mock.call(&quot;light.3&quot;)]
+    )
+</code></pre>
+<p>This test uses the <a title="appdaemon_testing.HassDriver.setup" href="#appdaemon_testing.HassDriver.setup"><code>HassDriver.setup()</code></a> context manager to set the initial state for testing. When execution is within <a title="appdaemon_testing.HassDriver.setup" href="#appdaemon_testing.HassDriver.setup"><code>HassDriver.setup()</code></a> all state updates will not be triggered.</p>
+<p>With the initial state configured, we can now proceed to triggering the state change (<a title="appdaemon_testing.HassDriver.set_state" href="#appdaemon_testing.HassDriver.set_state"><code>HassDriver.set_state()</code></a>). After the state change has occured, we can then begin to make assertions about calls made to the underlying API. In this test we wish to make assertions that <code>turn_on</code> is called. We obtain the <code>turn_on</code> mock implementation and make assertions about its calls and call count.
+</p>
+<p>You can see this full example and example directory structure within the <a href="https://github.com/nickw444/appdaemon-testing/tree/master/example"><code>example</code></a> directory in this repo.</p>
+<h2 id="pytest-plugin"><a href="https://docs.pytest.org/en/latest/"><code>pytest</code></a> plugin</h2>
+<p>The <a title="appdaemon_testing.pytest" href="pytest/index.html"><code>appdaemon_testing.pytest</code></a> package provides a handy <a title="appdaemon_testing.pytest.hass_driver" href="pytest/index.html#appdaemon_testing.pytest.hass_driver"><code>hass_driver()</code></a> fixture to allow you easy access to the global <a title="appdaemon_testing.HassDriver" href="#appdaemon_testing.HassDriver"><code>HassDriver</code></a> instance. This fixture takes care of ensuring AppDaemon base class methods are patched.</p>
+<p>Additionally, it provides a decorator, <a title="appdaemon_testing.pytest.automation_fixture" href="pytest/index.html#appdaemon_testing.pytest.automation_fixture"><code>automation_fixture()</code></a> which can be used to declare automation fixtures. It can be used like so:</p>
+<pre><code class="py">from appdaemon_testing.pytest import automation_fixture
+from apps.living_room_motion import LivingRoomMotion
+
+
+@automation_fixture(
+    LivingRoomMotion,
+    args={
+        &quot;motion_entity&quot;: &quot;binary_sensor.motion_detected&quot;,
+        &quot;light_entities&quot;: [&quot;light.1&quot;, &quot;light.2&quot;, &quot;light.3&quot;],
+    },
+)
+def living_room_motion() -&gt; LivingRoomMotion:
+    pass
+</code></pre>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+.. include:: ../README.md
+&#34;&#34;&#34;
+from .hass_driver import HassDriver
+
+__all__ = [&#34;HassDriver&#34;]</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="appdaemon_testing.pytest" href="pytest/index.html">appdaemon_testing.pytest</a></code></dt>
+<dd>
+<section class="desc"></section>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="appdaemon_testing.HassDriver"><code class="flex name class">
+<span>class <span class="ident">HassDriver</span></span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HassDriver:
+    def __init__(self):
+        self._mocks = dict(
+            call_service=mock.Mock(),
+            cancel_timer=mock.Mock(),
+            get_state=mock.Mock(side_effect=self._se_get_state),
+            # TODO(NW): Implement side-effect for listen_event
+            listen_event=mock.Mock(),
+            fire_event=mock.Mock(),
+            listen_state=mock.Mock(side_effect=self._se_listen_state),
+            notify=mock.Mock(),
+            run_at=mock.Mock(),
+            run_at_sunrise=mock.Mock(),
+            run_at_sunset=mock.Mock(),
+            run_daily=mock.Mock(),
+            run_every=mock.Mock(),
+            run_hourly=mock.Mock(),
+            run_in=mock.Mock(),
+            run_minutely=mock.Mock(),
+            set_state=mock.Mock(),
+            time=mock.Mock(),
+            turn_off=mock.Mock(),
+            turn_on=mock.Mock(),
+        )
+
+        self._setup_active = False
+        self._states: Dict[str, Dict[str, Any]] = defaultdict(lambda: {&#34;state&#34;: None})
+        self._state_spys: Dict[Union[str, None], List[StateSpy]] = defaultdict(
+            lambda: []
+        )
+
+    def get_mock(self, meth: str) -&gt; mock.Mock:
+        &#34;&#34;&#34;
+        Returns the mock associated with the provided AppDaemon method
+
+        Parameters:
+            meth: The method to retreive the mock implementation for
+        &#34;&#34;&#34;
+        return self._mocks[meth]
+
+    def inject_mocks(self) -&gt; None:
+        &#34;&#34;&#34;
+        Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock implementations.
+        &#34;&#34;&#34;
+        for meth_name, impl in self._mocks.items():
+            if getattr(hass.Hass, meth_name) is None:
+                raise AssertionError(&#34;Attempt to mock non existing method: &#34;, meth_name)
+            _LOGGER.debug(&#34;Patching hass.Hass.%s&#34;, meth_name)
+            setattr(hass.Hass, meth_name, impl)
+
+    @contextlib.contextmanager
+    def setup(self):
+        &#34;&#34;&#34;
+        A context manager to indicate that execution is taking place during a &#34;setup&#34; phase.
+
+        This context manager can be used to configure/set up any existing states that might
+        be required to run the test. State changes during execution within this context manager
+        will cause `listen_state` handlers to not be called.
+
+        Example:
+
+        ```py
+        def test_my_app(hass_driver, my_app: MyApp):
+            with hass_driver.setup():
+                # Any registered listen_state handlers will not be called
+                hass_driver.set_state(&#34;binary_sensor.motion_detected&#34;, &#34;off&#34;)
+
+            # Respective listen_state handlers will be called
+            hass_driver.set_state(&#34;binary_sensor.motion_detected&#34;, &#34;on&#34;)
+            ...
+        ```
+        &#34;&#34;&#34;
+        self._setup_active = True
+        yield None
+        self._setup_active = False
+
+    def set_state(
+        self, entity, state, *, attribute_name=&#34;state&#34;, previous=None, trigger=None
+    ) -&gt; None:
+        &#34;&#34;&#34;
+        Update/set state of an entity.
+
+        State changes will cause listeners (via listen_state) to be called on their respective
+        state changes.
+
+        Parameters:
+            entity: The entity to update
+            state: The state value to set
+            attribute_name: The attribute to set
+            previous: Forced previous value
+            trigger: Whether this change should trigger registered listeners (via listen_state)
+        &#34;&#34;&#34;
+        if trigger is None:
+            # Avoid triggering state changes during state setup phase
+            trigger = not self._setup_active
+
+        domain, _ = entity.split(&#34;.&#34;)
+        state_entry = self._states[entity]
+        prev_state = copy(state_entry)
+        old_value = previous or prev_state.get(attribute_name)
+        new_value = state
+
+        if old_value == new_value:
+            return
+
+        # Update the state entry
+        state_entry[attribute_name] = new_value
+
+        if not trigger:
+            return
+
+        # Notify subscribers of the change
+        for spy in self._state_spys[domain] + self._state_spys[entity]:
+            sat_attr = spy.attribute == attribute_name or spy.attribute == &#34;all&#34;
+            sat_new = spy.new is None or spy.new == new_value
+            sat_old = spy.old is None or spy.old == old_value
+
+            param_old = prev_state if spy.attribute == &#34;all&#34; else old_value
+            param_new = copy(state_entry) if spy.attribute == &#34;all&#34; else new_value
+            param_attribute = None if spy.attribute == &#34;all&#34; else attribute_name
+
+            if all([sat_old, sat_new, sat_attr]):
+                spy.callback(entity, param_attribute, param_old, param_new, spy.kwargs)
+
+    def _se_get_state(self, entity_id=None, attribute=&#34;state&#34;, default=None, **kwargs):
+        _LOGGER.debug(&#34;Getting state for entity: %s&#34;, entity_id)
+
+        fully_qualified = &#34;.&#34; in entity_id
+        matched_states = {}
+        if fully_qualified:
+            matched_states[entity_id] = self._states[entity_id]
+        else:
+            for s_eid, state in self._states.items():
+                domain, entity = s_eid.split(&#34;.&#34;)
+                if domain == entity_id:
+                    matched_states[s_eid] = state
+
+        # With matched states, map the provided attribute (if applicable)
+        if attribute != &#34;all&#34;:
+            matched_states = {
+                eid: state.get(attribute) for eid, state in matched_states.items()
+            }
+
+        if default is not None:
+            matched_states = {
+                eid: state or default for eid, state in matched_states.items()
+            }
+
+        if fully_qualified:
+            return matched_states[entity_id]
+        else:
+            return matched_states
+
+    def _se_listen_state(
+        self, callback, entity=None, attribute=None, new=None, old=None, **kwargs
+    ):
+        spy = StateSpy(
+            callback=callback,
+            attribute=attribute or &#34;state&#34;,
+            new=new,
+            old=old,
+            kwargs=kwargs,
+        )
+        self._state_spys[entity].append(spy)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="appdaemon_testing.HassDriver.get_mock"><code class="name flex">
+<span>def <span class="ident">get_mock</span></span>(<span>self, meth)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the mock associated with the provided AppDaemon method</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>meth</code></strong></dt>
+<dd>The method to retreive the mock implementation for</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_mock(self, meth: str) -&gt; mock.Mock:
+    &#34;&#34;&#34;
+    Returns the mock associated with the provided AppDaemon method
+
+    Parameters:
+        meth: The method to retreive the mock implementation for
+    &#34;&#34;&#34;
+    return self._mocks[meth]</code></pre>
+</details>
+</dd>
+<dt id="appdaemon_testing.HassDriver.inject_mocks"><code class="name flex">
+<span>def <span class="ident">inject_mocks</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock implementations.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def inject_mocks(self) -&gt; None:
+    &#34;&#34;&#34;
+    Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock implementations.
+    &#34;&#34;&#34;
+    for meth_name, impl in self._mocks.items():
+        if getattr(hass.Hass, meth_name) is None:
+            raise AssertionError(&#34;Attempt to mock non existing method: &#34;, meth_name)
+        _LOGGER.debug(&#34;Patching hass.Hass.%s&#34;, meth_name)
+        setattr(hass.Hass, meth_name, impl)</code></pre>
+</details>
+</dd>
+<dt id="appdaemon_testing.HassDriver.set_state"><code class="name flex">
+<span>def <span class="ident">set_state</span></span>(<span>self, entity, state, *, attribute_name='state', previous=None, trigger=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Update/set state of an entity.</p>
+<p>State changes will cause listeners (via listen_state) to be called on their respective
+state changes.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>entity</code></strong></dt>
+<dd>The entity to update</dd>
+<dt><strong><code>state</code></strong></dt>
+<dd>The state value to set</dd>
+<dt><strong><code>attribute_name</code></strong></dt>
+<dd>The attribute to set</dd>
+<dt><strong><code>previous</code></strong></dt>
+<dd>Forced previous value</dd>
+<dt><strong><code>trigger</code></strong></dt>
+<dd>Whether this change should trigger registered listeners (via listen_state)</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_state(
+    self, entity, state, *, attribute_name=&#34;state&#34;, previous=None, trigger=None
+) -&gt; None:
+    &#34;&#34;&#34;
+    Update/set state of an entity.
+
+    State changes will cause listeners (via listen_state) to be called on their respective
+    state changes.
+
+    Parameters:
+        entity: The entity to update
+        state: The state value to set
+        attribute_name: The attribute to set
+        previous: Forced previous value
+        trigger: Whether this change should trigger registered listeners (via listen_state)
+    &#34;&#34;&#34;
+    if trigger is None:
+        # Avoid triggering state changes during state setup phase
+        trigger = not self._setup_active
+
+    domain, _ = entity.split(&#34;.&#34;)
+    state_entry = self._states[entity]
+    prev_state = copy(state_entry)
+    old_value = previous or prev_state.get(attribute_name)
+    new_value = state
+
+    if old_value == new_value:
+        return
+
+    # Update the state entry
+    state_entry[attribute_name] = new_value
+
+    if not trigger:
+        return
+
+    # Notify subscribers of the change
+    for spy in self._state_spys[domain] + self._state_spys[entity]:
+        sat_attr = spy.attribute == attribute_name or spy.attribute == &#34;all&#34;
+        sat_new = spy.new is None or spy.new == new_value
+        sat_old = spy.old is None or spy.old == old_value
+
+        param_old = prev_state if spy.attribute == &#34;all&#34; else old_value
+        param_new = copy(state_entry) if spy.attribute == &#34;all&#34; else new_value
+        param_attribute = None if spy.attribute == &#34;all&#34; else attribute_name
+
+        if all([sat_old, sat_new, sat_attr]):
+            spy.callback(entity, param_attribute, param_old, param_new, spy.kwargs)</code></pre>
+</details>
+</dd>
+<dt id="appdaemon_testing.HassDriver.setup"><code class="name flex">
+<span>def <span class="ident">setup</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>A context manager to indicate that execution is taking place during a "setup" phase.</p>
+<p>This context manager can be used to configure/set up any existing states that might
+be required to run the test. State changes during execution within this context manager
+will cause <code>listen_state</code> handlers to not be called.</p>
+<p>Example:</p>
+<pre><code class="py">def test_my_app(hass_driver, my_app: MyApp):
+    with hass_driver.setup():
+        # Any registered listen_state handlers will not be called
+        hass_driver.set_state(&quot;binary_sensor.motion_detected&quot;, &quot;off&quot;)
+
+    # Respective listen_state handlers will be called
+    hass_driver.set_state(&quot;binary_sensor.motion_detected&quot;, &quot;on&quot;)
+    ...
+</code></pre></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@contextlib.contextmanager
+def setup(self):
+    &#34;&#34;&#34;
+    A context manager to indicate that execution is taking place during a &#34;setup&#34; phase.
+
+    This context manager can be used to configure/set up any existing states that might
+    be required to run the test. State changes during execution within this context manager
+    will cause `listen_state` handlers to not be called.
+
+    Example:
+
+    ```py
+    def test_my_app(hass_driver, my_app: MyApp):
+        with hass_driver.setup():
+            # Any registered listen_state handlers will not be called
+            hass_driver.set_state(&#34;binary_sensor.motion_detected&#34;, &#34;off&#34;)
+
+        # Respective listen_state handlers will be called
+        hass_driver.set_state(&#34;binary_sensor.motion_detected&#34;, &#34;on&#34;)
+        ...
+    ```
+    &#34;&#34;&#34;
+    self._setup_active = True
+    yield None
+    self._setup_active = False</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#appdaemon-testing">appdaemon-testing</a><ul>
+<li><a href="#install">Install</a></li>
+<li><a href="#api-documentation">API Documentation</a></li>
+<li><a href="#writing-your-first-test">Writing your first test</a></li>
+<li><a href="#pytest-plugin">pytest plugin</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="appdaemon_testing.pytest" href="pytest/index.html">appdaemon_testing.pytest</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="appdaemon_testing.HassDriver" href="#appdaemon_testing.HassDriver">HassDriver</a></code></h4>
+<ul class="">
+<li><code><a title="appdaemon_testing.HassDriver.get_mock" href="#appdaemon_testing.HassDriver.get_mock">get_mock</a></code></li>
+<li><code><a title="appdaemon_testing.HassDriver.inject_mocks" href="#appdaemon_testing.HassDriver.inject_mocks">inject_mocks</a></code></li>
+<li><code><a title="appdaemon_testing.HassDriver.set_state" href="#appdaemon_testing.HassDriver.set_state">set_state</a></code></li>
+<li><code><a title="appdaemon_testing.HassDriver.setup" href="#appdaemon_testing.HassDriver.setup">setup</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
