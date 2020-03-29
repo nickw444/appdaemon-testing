@@ -160,8 +160,8 @@ def test_setup_does_not_trigger_spys(hass_driver):
 
 class MyLoggingApp(hass.Hass):
     def initialize(self):
-        self.log('This is a log')
-        self.error('This is an error')
+        self.log("This is a log")
+        self.error("This is an error")
 
 
 @automation_fixture(MyLoggingApp, initialize=False)
@@ -176,8 +176,8 @@ def test_log(hass_driver, my_logging_app: MyLoggingApp):
 
     log = hass_driver.get_mock("log")
     error = hass_driver.get_mock("error")
-    log.assert_called_once_with('This is a log')
-    error.assert_called_once_with('This is an error')
+    log.assert_called_once_with("This is a log")
+    error.assert_called_once_with("This is an error")
 
 
 @pytest.fixture
