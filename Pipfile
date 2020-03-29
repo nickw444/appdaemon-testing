@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+appdaemon = "*"
+appdaemon-testing = {editable = true,path = "."}
+black = "*"
+flake8 = "*"
+
+[packages]
+
+[requires]
+python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
