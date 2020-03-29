@@ -62,7 +62,8 @@ class HassDriver:
 
     def inject_mocks(self) -> None:
         """
-        Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock implementations.
+        Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock
+        implementations.
         """
         for meth_name, impl in self._mocks.items():
             if getattr(hass.Hass, meth_name) is None:
@@ -73,11 +74,12 @@ class HassDriver:
     @contextlib.contextmanager
     def setup(self):
         """
-        A context manager to indicate that execution is taking place during a "setup" phase.
+        A context manager to indicate that execution is taking place during a
+        "setup" phase.
 
-        This context manager can be used to configure/set up any existing states that might
-        be required to run the test. State changes during execution within this context manager
-        will cause `listen_state` handlers to not be called.
+        This context manager can be used to configure/set up any existing states
+        that might be required to run the test. State changes during execution within
+        this context manager will cause `listen_state` handlers to not be called.
 
         Example:
 
@@ -102,15 +104,16 @@ class HassDriver:
         """
         Update/set state of an entity.
 
-        State changes will cause listeners (via listen_state) to be called on their respective
-        state changes.
+        State changes will cause listeners (via listen_state) to be called on
+        their respective state changes.
 
         Parameters:
             entity: The entity to update
             state: The state value to set
             attribute_name: The attribute to set
             previous: Forced previous value
-            trigger: Whether this change should trigger registered listeners (via listen_state)
+            trigger: Whether this change should trigger registered listeners
+                     (via listen_state)
         """
         if trigger is None:
             # Avoid triggering state changes during state setup phase

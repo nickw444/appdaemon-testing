@@ -192,7 +192,8 @@ __all__ = [&#34;HassDriver&#34;]</code></pre>
 
     def inject_mocks(self) -&gt; None:
         &#34;&#34;&#34;
-        Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock implementations.
+        Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock
+        implementations.
         &#34;&#34;&#34;
         for meth_name, impl in self._mocks.items():
             if getattr(hass.Hass, meth_name) is None:
@@ -203,11 +204,12 @@ __all__ = [&#34;HassDriver&#34;]</code></pre>
     @contextlib.contextmanager
     def setup(self):
         &#34;&#34;&#34;
-        A context manager to indicate that execution is taking place during a &#34;setup&#34; phase.
+        A context manager to indicate that execution is taking place during a
+        &#34;setup&#34; phase.
 
-        This context manager can be used to configure/set up any existing states that might
-        be required to run the test. State changes during execution within this context manager
-        will cause `listen_state` handlers to not be called.
+        This context manager can be used to configure/set up any existing states
+        that might be required to run the test. State changes during execution within
+        this context manager will cause `listen_state` handlers to not be called.
 
         Example:
 
@@ -232,15 +234,16 @@ __all__ = [&#34;HassDriver&#34;]</code></pre>
         &#34;&#34;&#34;
         Update/set state of an entity.
 
-        State changes will cause listeners (via listen_state) to be called on their respective
-        state changes.
+        State changes will cause listeners (via listen_state) to be called on
+        their respective state changes.
 
         Parameters:
             entity: The entity to update
             state: The state value to set
             attribute_name: The attribute to set
             previous: Forced previous value
-            trigger: Whether this change should trigger registered listeners (via listen_state)
+            trigger: Whether this change should trigger registered listeners
+                     (via listen_state)
         &#34;&#34;&#34;
         if trigger is None:
             # Avoid triggering state changes during state setup phase
@@ -345,14 +348,16 @@ __all__ = [&#34;HassDriver&#34;]</code></pre>
 <span>def <span class="ident">inject_mocks</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock implementations.</p></section>
+<section class="desc"><p>Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock
+implementations.</p></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def inject_mocks(self) -&gt; None:
     &#34;&#34;&#34;
-    Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock implementations.
+    Monkey-patch the AppDaemon hassapi.Hass base-class methods with mock
+    implementations.
     &#34;&#34;&#34;
     for meth_name, impl in self._mocks.items():
         if getattr(hass.Hass, meth_name) is None:
@@ -366,8 +371,8 @@ __all__ = [&#34;HassDriver&#34;]</code></pre>
 </code></dt>
 <dd>
 <section class="desc"><p>Update/set state of an entity.</p>
-<p>State changes will cause listeners (via listen_state) to be called on their respective
-state changes.</p>
+<p>State changes will cause listeners (via listen_state) to be called on
+their respective state changes.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>entity</code></strong></dt>
@@ -379,7 +384,8 @@ state changes.</p>
 <dt><strong><code>previous</code></strong></dt>
 <dd>Forced previous value</dd>
 <dt><strong><code>trigger</code></strong></dt>
-<dd>Whether this change should trigger registered listeners (via listen_state)</dd>
+<dd>Whether this change should trigger registered listeners
+(via listen_state)</dd>
 </dl></section>
 <details class="source">
 <summary>
@@ -391,15 +397,16 @@ state changes.</p>
     &#34;&#34;&#34;
     Update/set state of an entity.
 
-    State changes will cause listeners (via listen_state) to be called on their respective
-    state changes.
+    State changes will cause listeners (via listen_state) to be called on
+    their respective state changes.
 
     Parameters:
         entity: The entity to update
         state: The state value to set
         attribute_name: The attribute to set
         previous: Forced previous value
-        trigger: Whether this change should trigger registered listeners (via listen_state)
+        trigger: Whether this change should trigger registered listeners
+                 (via listen_state)
     &#34;&#34;&#34;
     if trigger is None:
         # Avoid triggering state changes during state setup phase
@@ -438,10 +445,11 @@ state changes.</p>
 <span>def <span class="ident">setup</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>A context manager to indicate that execution is taking place during a "setup" phase.</p>
-<p>This context manager can be used to configure/set up any existing states that might
-be required to run the test. State changes during execution within this context manager
-will cause <code>listen_state</code> handlers to not be called.</p>
+<section class="desc"><p>A context manager to indicate that execution is taking place during a
+"setup" phase.</p>
+<p>This context manager can be used to configure/set up any existing states
+that might be required to run the test. State changes during execution within
+this context manager will cause <code>listen_state</code> handlers to not be called.</p>
 <p>Example:</p>
 <pre><code class="py">def test_my_app(hass_driver, my_app: MyApp):
     with hass_driver.setup():
@@ -459,11 +467,12 @@ will cause <code>listen_state</code> handlers to not be called.</p>
 <pre><code class="python">@contextlib.contextmanager
 def setup(self):
     &#34;&#34;&#34;
-    A context manager to indicate that execution is taking place during a &#34;setup&#34; phase.
+    A context manager to indicate that execution is taking place during a
+    &#34;setup&#34; phase.
 
-    This context manager can be used to configure/set up any existing states that might
-    be required to run the test. State changes during execution within this context manager
-    will cause `listen_state` handlers to not be called.
+    This context manager can be used to configure/set up any existing states
+    that might be required to run the test. State changes during execution within
+    this context manager will cause `listen_state` handlers to not be called.
 
     Example:
 

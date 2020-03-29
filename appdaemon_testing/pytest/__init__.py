@@ -29,7 +29,8 @@ def automation_fixture(App: Type[T], args=None, initialize=True):
 
     Parameters:
         App: The AppDaemon application to create the fixture for
-        args: arguments that should be provided to the app when it is instantiated (`self.args`)
+        args: arguments that should be provided to the app when it is
+              instantiated (`self.args`)
         initialize: Whether `app.initialize()` should be called.
     """
 
