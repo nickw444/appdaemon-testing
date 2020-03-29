@@ -2,6 +2,7 @@ import contextlib
 import logging
 import unittest.mock as mock
 from collections import defaultdict
+from copy import copy
 from dataclasses import dataclass
 from typing import Dict, Any, List, Callable, Union, Optional
 
@@ -75,7 +76,8 @@ class HassDriver:
 
         domain, _ = entity.split(".")
         state_entry = self._states[entity]
-        old_value = previous or state_entry.get(attribute_name)
+        prev_state = copy(state_entry)
+        old_value = previous or prev_state.get(attribute_name)
         new_value = state
 
         if old_value == new_value:
@@ -93,31 +95,35 @@ class HassDriver:
             sat_new = spy.new is None or spy.new == new_value
             sat_old = spy.old is None or spy.old == old_value
 
+            param_old = prev_state if spy.attribute == 'all' else old_value
+            param_new = copy(state_entry) if spy.attribute == 'all' else new_value
+            param_attribute = None if spy.attribute == 'all' else attribute_name
+
             if all([sat_old, sat_new, sat_attr]):
-                spy.callback(entity, attribute_name, old_value, new_value, spy.kwargs)
+                spy.callback(entity, param_attribute, param_old, param_new, spy.kwargs)
 
     def _se_get_state(self, entity_id=None, attribute="state", default=None, **kwargs):
         _LOGGER.debug("Getting state for entity: %s", entity_id)
 
         fully_qualified = "." in entity_id
-        matched_states = []
+        matched_states = {}
         if fully_qualified:
-            matched_states.append(self._states[entity_id])
+            matched_states[entity_id] = self._states[entity_id]
         else:
             for s_eid, state in self._states.items():
                 domain, entity = s_eid.split(".")
                 if domain == entity_id:
-                    matched_states.append(state)
+                    matched_states[s_eid] = state
 
         # With matched states, map the provided attribute (if applicable)
         if attribute != "all":
-            matched_states = [state[attribute] for state in matched_states]
+            matched_states = {eid: state.get(attribute) for eid, state in matched_states.items()}
 
         if default is not None:
-            matched_states = [state or default for state in matched_states]
+            matched_states = {eid: state or default for eid, state in matched_states.items()}
 
         if fully_qualified:
-            return matched_states[0]
+            return matched_states[entity_id]
         else:
             return matched_states
 
