@@ -6,14 +6,8 @@ from apps.living_room_motion import LivingRoomMotion
 
 def test_callbacks_are_registered(hass_driver, living_room_motion: LivingRoomMotion):
     listen_state = hass_driver.get_mock("listen_state")
-    assert listen_state.call_count == 1
-    listen_state.assert_has_calls(
-        [
-            mock.call(
-                living_room_motion.on_motion_detected, "binary_sensor.motion_detected"
-            )
-        ]
-    )
+    listen_state.assert_called_once_with(
+        living_room_motion.on_motion_detected, "binary_sensor.motion_detected")
 
 
 def test_lights_are_turned_on_when_motion_detected(
