@@ -36,4 +36,4 @@ def automation_fixture(App: Type[T], args=None, initialize=True):
     return decorator
 
 
-__all__ = ['automation_fixture', 'hass_driver']
+__all__ = ["automation_fixture", "hass_driver"]
