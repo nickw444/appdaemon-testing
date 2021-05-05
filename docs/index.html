@@ -24,13 +24,13 @@ Ergonomic and pythonic unit testing for AppDaemon apps. Utilities to allow you t
 <h1 id="appdaemon-testing">appdaemon-testing</h1>
 <p>Ergonomic and pythonic unit testing for AppDaemon apps. Utilities to allow you to test your AppDaemon home automation apps using all the <em>pythonic</em> testing patterns you are already familiar with.</p>
 <h2 id="install">Install</h2>
-<pre><code class="sh">pip install appdaemon-testing
+<pre><code class="language-sh">pip install appdaemon-testing
 </code></pre>
 <h2 id="full-documentation">Full Documentation</h2>
 <p>An enhanced, source-linked version of the documentation below as well as complete <a href="https://nickwhyte.com/appdaemon-testing/#header-submodules">API documentation</a> is available <a href="https://nickwhyte.com/appdaemon-testing/">here</a></p>
 <h2 id="writing-your-first-test">Writing your first test</h2>
 <p>This demo assumes you will use <a href="https://docs.pytest.org/en/latest/"><code>pytest</code></a> as your test runner. Install the <code>appdaemon-testing</code> and <a href="https://docs.pytest.org/en/latest/"><code>pytest</code></a> packages:</p>
-<pre><code class="sh">pip install appdaemon-testing pytest
+<pre><code class="language-sh">pip install appdaemon-testing pytest
 </code></pre>
 <p>In your <code>appdaemon</code> configuration directory, introduce a new <code>tests</code> directory. This is where we are going to write the tests for your apps.</p>
 <p>Additionally we also need to introduce an <code>__init__.py</code> file to <code>tests</code> and <code>apps</code> directories to make them an importable package. You should have a tree that looks something like this:</p>
@@ -46,7 +46,7 @@ Ergonomic and pythonic unit testing for AppDaemon apps. Utilities to allow you t
     └── test_living_room_motion.py
 </code></pre>
 <p>We have an automation, <code>apps/living_room_motion.py</code> that we wish to test. It looks like this:</p>
-<pre><code class="py">import appdaemon.plugins.hass.hassapi as hass
+<pre><code class="language-py">import appdaemon.plugins.hass.hassapi as hass
 
 
 class LivingRoomMotion(hass.Hass):
@@ -60,7 +60,7 @@ class LivingRoomMotion(hass.Hass):
 </code></pre>
 <p>Create a new file, <code>tests/test_living_room_motion.py</code>. This is where we will write the tests for our automation.</p>
 <p>First we will declare an <em><a title="appdaemon_testing.pytest.automation_fixture" href="pytest/index.html#appdaemon_testing.pytest.automation_fixture"><code>automation_fixture()</code></a></em>:</p>
-<pre><code class="py">@automation_fixture(
+<pre><code class="language-py">@automation_fixture(
     LivingRoomMotion,
     args={
         &quot;motion_entity&quot;: &quot;binary_sensor.motion_detected&quot;,
@@ -71,14 +71,14 @@ def living_room_motion() -&gt; LivingRoomMotion:
     pass
 </code></pre>
 <p>With this fixture, it's now possible to write some tests. We will first write a test to check the state listener callbacks are registered:</p>
-<pre><code class="py">def test_callbacks_are_registered(hass_driver, living_room_motion: LivingRoomMotion):
+<pre><code class="language-py">def test_callbacks_are_registered(hass_driver, living_room_motion: LivingRoomMotion):
     listen_state = hass_driver.get_mock(&quot;listen_state&quot;)
     listen_state.assert_called_once_with(
         living_room_motion.on_motion_detected, &quot;binary_sensor.motion_detected&quot;)
 </code></pre>
 <p>We use the <a title="appdaemon_testing.pytest.hass_driver" href="pytest/index.html#appdaemon_testing.pytest.hass_driver"><code>hass_driver()</code></a> fixture to obtain mock implementations of methods that exist on the AppDaemon Hass API. We can query these mocks and make assertions on their values. In this test we make an assertion that <code>listen_state</code> is called once with the specified parameters.</p>
 <p>We will next write a test to make an assertion that the lights are turned on when motion is detected:</p>
-<pre><code class="py">def test_lights_are_turned_on_when_motion_detected(
+<pre><code class="language-py">def test_lights_are_turned_on_when_motion_detected(
     hass_driver, living_room_motion: LivingRoomMotion
 ):
     with hass_driver.setup():
@@ -99,7 +99,7 @@ def living_room_motion() -&gt; LivingRoomMotion:
 <h2 id="pytest-plugin"><a href="https://docs.pytest.org/en/latest/"><code>pytest</code></a> plugin</h2>
 <p>The <a title="appdaemon_testing.pytest" href="pytest/index.html"><code>appdaemon_testing.pytest</code></a> package provides a handy <a title="appdaemon_testing.pytest.hass_driver" href="pytest/index.html#appdaemon_testing.pytest.hass_driver"><code>hass_driver()</code></a> fixture to allow you easy access to the global <a title="appdaemon_testing.HassDriver" href="#appdaemon_testing.HassDriver"><code>HassDriver</code></a> instance. This fixture takes care of ensuring AppDaemon base class methods are patched.</p>
 <p>Additionally, it provides a decorator, <a title="appdaemon_testing.pytest.automation_fixture" href="pytest/index.html#appdaemon_testing.pytest.automation_fixture"><code>automation_fixture()</code></a> which can be used to declare automation fixtures. It can be used like so:</p>
-<pre><code class="py">from appdaemon_testing.pytest import automation_fixture
+<pre><code class="language-py">from appdaemon_testing.pytest import automation_fixture
 from apps.living_room_motion import LivingRoomMotion
 
 
@@ -453,7 +453,7 @@ their respective state changes.</p>
 that might be required to run the test. State changes during execution within
 this context manager will cause <code>listen_state</code> handlers to not be called.</p>
 <p>Example:</p>
-<pre><code class="py">def test_my_app(hass_driver, my_app: MyApp):
+<pre><code class="language-py">def test_my_app(hass_driver, my_app: MyApp):
     with hass_driver.setup():
         # Any registered listen_state handlers will not be called
         hass_driver.set_state(&quot;binary_sensor.motion_detected&quot;, &quot;off&quot;)
