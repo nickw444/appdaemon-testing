@@ -48,7 +48,7 @@ jobs:
         displayName: 'Check Docs'
     displayName: "Check"
   - job: build
-    displayName: "Build"
+    displayName: "Build and Test"
     strategy:
       matrix:
         Python38:
