@@ -1,0 +1,110 @@
+trigger:
+  branches:
+    include:
+      - master
+  tags:
+    include:
+      - '*'
+
+schedules:
+- cron: '0 3 * * 6'
+  displayName: "Weekly scheduled build"
+  branches:
+    include:
+      - 'master'
+  always: true
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name: python.version
+  value: 3.x
+
+parameters:
+- name: step_install_dependencies
+  type: stepList
+  default:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(python.version)'
+      displayName: 'Use Python $(python.version)'
+    - script: |
+        python -m pip install --upgrade pip
+        pip install pipenv
+        pipenv install --system --dev
+        pip install .
+      displayName: 'Install Dependencies'
+
+jobs:
+  - job: check
+    steps:
+      - ${{ parameters.step_install_dependencies }}
+      - script: flake8 .
+        displayName: 'Check Formatting (flake8)'
+      - script: black --check .
+        displayName: 'Check Formatting (black)'
+      - script: ./bin/check_docs_updated.sh
+        displayName: 'Check Docs'
+    displayName: "Check"
+  - job: build
+    displayName: "Build"
+    strategy:
+      matrix:
+        Python38:
+          python.version: '3.8'
+        Python39:
+          python.version: '3.9'
+        Python3x:
+          python.version: '3.x'
+    steps:
+      - ${{ parameters.step_install_dependencies }}
+      - script: |
+          python setup.py test
+        displayName: 'Run Tests'
+      - script: pip install wheel
+        displayName: 'Install Build Dependencies'
+      - script: |
+          sed -i "s/0.0.0-dev/$(git describe --exact-match)/" appdaemon_testing/__init__.py
+          python setup.py bdist_wheel
+        displayName: "Build"
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: 'dist/'
+          ArtifactName: 'dist'
+          publishLocation: 'Container'
+        # Only publish artifacts from Python latest build.
+        condition: eq(variables['python.version'], '3.x')
+        displayName: "Publish Build Artifact"
+  - job: release
+    dependsOn:
+      - build
+      - check
+    displayName: "Release"
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+    steps:
+      - ${{ parameters.step_install_dependencies }}
+      - task: TwineAuthenticate@1
+        inputs:
+          pythonUploadServiceConnection: 'appdaemon-testing'
+      - script: |
+          pip install twine
+        displayName: 'Install Release Dependencies'
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'single'
+          artifactName: 'dist'
+          downloadPath: '$(System.ArtifactsDirectory)'
+      - script: |
+          python -m twine upload -r 'appdaemon-testing' --config-file $(PYPIRC_PATH) $(System.ArtifactsDirectory)/dist/*.whl
+        displayName: "Release to PyPi"
+      - task: GitHubRelease@1
+        inputs:
+          gitHubConnection: 'github.com_nickw444'
+          repositoryName: '$(Build.Repository.Name)'
+          action: 'create'
+          target: '$(Build.SourceVersion)'
+          tagSource: 'gitTag'
+          changeLogCompareToRelease: 'lastFullRelease'
+          changeLogType: 'commitBased'
