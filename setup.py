@@ -15,6 +15,7 @@ setup(
     url="https://github.com/nickw444/appdaemon-testing",
     entry_points={"pytest11": ["appdaemon_testing = appdaemon_testing.pytest"]},
     install_requires=["appdaemon"],
+    setup_requires=['pytest-runner'],
     tests_require=tests_require,
     extras_require={"test": tests_require, "pytest": ["pytest"]},
     license="MIT",
