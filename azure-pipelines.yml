@@ -81,7 +81,7 @@ jobs:
       - build
       - check
     displayName: "Release"
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
     steps:
       - ${{ parameters.step_install_dependencies }}
       - task: TwineAuthenticate@1
