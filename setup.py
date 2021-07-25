@@ -7,7 +7,6 @@ tests_require = ["pytest"]
 
 setup(
     name="appdaemon-testing",
-    version="0.1.2",
     description="Utilities for testing AppDaemon applications",
     long_description=readme,
     long_description_content_type="text/markdown",
