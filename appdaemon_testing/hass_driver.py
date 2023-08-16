@@ -4,7 +4,7 @@ import unittest.mock as mock
 from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass
-from typing import Dict, Any, List, Callable, Union, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import appdaemon.plugins.hass.hassapi as hass
 
@@ -26,6 +26,7 @@ class HassDriver:
             log=mock.Mock(),
             error=mock.Mock(),
             call_service=mock.Mock(),
+            cancel_listen_state=mock.Mock(side_effect=self._se_cancel_listen_state),
             cancel_timer=mock.Mock(),
             get_state=mock.Mock(side_effect=self._se_get_state),
             # TODO(NW): Implement side-effect for listen_event
@@ -41,7 +42,7 @@ class HassDriver:
             run_hourly=mock.Mock(),
             run_in=mock.Mock(),
             run_minutely=mock.Mock(),
-            set_state=mock.Mock(),
+            set_state=mock.Mock(side_effect=self._se_set_state),
             time=mock.Mock(),
             turn_off=mock.Mock(),
             turn_on=mock.Mock(),
@@ -49,9 +50,7 @@ class HassDriver:
 
         self._setup_active = False
         self._states: Dict[str, Dict[str, Any]] = defaultdict(lambda: {"state": None})
-        self._state_spys: Dict[Union[str, None], List[StateSpy]] = defaultdict(
-            lambda: []
-        )
+        self._state_spys: Dict[Union[str, None], List[StateSpy]] = defaultdict(lambda: [])
 
     def get_mock(self, meth: str) -> mock.Mock:
         """
@@ -100,9 +99,13 @@ class HassDriver:
         yield None
         self._setup_active = False
 
-    def set_state(
-        self, entity, state, *, attribute_name="state", previous=None, trigger=None
-    ) -> None:
+    def _se_set_state(self, entity_id: str, state, attribute_name="state", **kwargs: Optional[Any]):
+        state_entry = self._states[entity_id]
+
+        # Update the state entry
+        state_entry[attribute_name] = state
+
+    def set_state(self, entity, state, *, attribute_name="state", previous=None, trigger=None) -> None:
         """
         Update/set state of an entity.
 
@@ -115,7 +118,7 @@ class HassDriver:
             attribute_name: The attribute to set
             previous: Forced previous value
             trigger: Whether this change should trigger registered listeners
-                     (via listen_state)
+                    (via listen_state)
         """
         if trigger is None:
             # Avoid triggering state changes during state setup phase
@@ -158,29 +161,28 @@ class HassDriver:
             matched_states[entity_id] = self._states[entity_id]
         else:
             for s_eid, state in self._states.items():
-                domain, entity = s_eid.split(".")
+                domain, _ = s_eid.split(".")
                 if domain == entity_id:
                     matched_states[s_eid] = state
 
         # With matched states, map the provided attribute (if applicable)
         if attribute != "all":
-            matched_states = {
-                eid: state.get(attribute) for eid, state in matched_states.items()
-            }
+            matched_states = {eid: state.get(attribute) for eid, state in matched_states.items()}
 
         if default is not None:
-            matched_states = {
-                eid: state or default for eid, state in matched_states.items()
-            }
+            matched_states = {eid: state or default for eid, state in matched_states.items()}
 
         if fully_qualified:
             return matched_states[entity_id]
         else:
             return matched_states
 
-    def _se_listen_state(
-        self, callback, entity=None, attribute=None, new=None, old=None, **kwargs
-    ):
+    def get_number_of_callbacks(self, entity):
+        if entity in self._state_spys.keys():
+            return len(self._state_spys.get(entity))
+        return 0
+
+    def _se_listen_state(self, callback, entity=None, attribute=None, new=None, old=None, **kwargs) -> StateSpy:
         spy = StateSpy(
             callback=callback,
             attribute=attribute or "state",
@@ -188,4 +190,21 @@ class HassDriver:
             old=old,
             kwargs=kwargs,
         )
+        # WARNING: This works only if function setting callback is called after setup.
+        # It may be required to defer initialize by setting initialize to False in fixture definition
+        # and calling <app>.initialize() after setup
         self._state_spys[entity].append(spy)
+        if "immediate" in spy.kwargs and spy.kwargs["immediate"] is True:
+            state = self._states[entity][spy.attribute]
+            if (spy.new is None) or (spy.new == state):
+                spy.callback(entity=entity, attribute="state", new=state, old=old, kwargs=spy.kwargs)
+        return spy
+
+    def _se_cancel_listen_state(self, handle):
+        for key, states in self._state_spys.items():
+            for value in states:
+                if value == handle:
+                    states.remove(value)
+                    if not states:
+                        del self._state_spys[key]
+                    return
