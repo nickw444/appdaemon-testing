@@ -45,7 +45,7 @@ class HassDriver:
             run_daily=mock.Mock(),
             run_every=mock.Mock(),
             run_hourly=mock.Mock(),
-            run_in=mock.Mock(),
+            run_in=mock.Mock(side_effect=self._se_run_in),
             run_minutely=mock.Mock(),
             set_state=mock.Mock(side_effect=self._se_set_state),
             time=mock.Mock(),
@@ -58,6 +58,8 @@ class HassDriver:
         self._events: Dict[str, Any] = defaultdict(lambda: [])
         self._state_spys: Dict[Union[str, None], List[StateSpy]] = defaultdict(lambda: [])
         self._event_spys: Dict[str, EventSpy] = defaultdict(lambda: [])
+        self._run_in_simulations = []
+        self._clock_time = 0  # Simulated time in seconds
 
     def get_mock(self, meth: str) -> mock.Mock:
         """
@@ -229,3 +231,41 @@ class HassDriver:
         if event_name in self._event_spys:
             spy = self._event_spys[event_name][0]
             spy.callback(event_name=event_name, data=kwargs, kwargs=kwargs)
+
+    def set_clock_time(self, time_in_seconds):
+        """
+        Set the simulated clock time.
+        """
+        self._clock_time = time_in_seconds
+
+    def _se_run_in(self, callback, delay, **kwargs):
+        """
+        Simulate an AppDaemon run_in call.
+        return handle
+        """
+        run_time = self._clock_time + delay
+        self._run_in_simulations.append({"callback": callback, "run_time": run_time, "kwargs": kwargs})
+        return callback
+
+    def get_run_in_simulations(self):
+        """
+        Get the list of simulated run_in calls.
+        """
+        return self._run_in_simulations
+
+    def advance_time(self, seconds):
+        """
+        Advance the simulated clock time by the specified number of seconds.
+        """
+        self._clock_time += seconds
+
+        # Check for any run_in calls that should be triggered
+        for sim in self._run_in_simulations:
+            if sim["run_time"] <= self._clock_time:
+                callback = sim["callback"]
+                kwargs = sim["kwargs"]
+                if callable(callback):
+                    callback(None, **kwargs)  # Call the callback immediately
+
+                # Remove the triggered run_in simulation
+                self._run_in_simulations.remove(sim)
