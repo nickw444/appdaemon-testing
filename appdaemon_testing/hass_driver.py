@@ -20,6 +20,12 @@ class StateSpy:
     kwargs: Any
 
 
+@dataclass(frozen=True)
+class EventSpy:
+    callback: Callable
+    event_name: str
+
+
 class HassDriver:
     def __init__(self):
         self._mocks = dict(
@@ -29,9 +35,8 @@ class HassDriver:
             cancel_listen_state=mock.Mock(side_effect=self._se_cancel_listen_state),
             cancel_timer=mock.Mock(),
             get_state=mock.Mock(side_effect=self._se_get_state),
-            # TODO(NW): Implement side-effect for listen_event
-            listen_event=mock.Mock(),
-            fire_event=mock.Mock(),
+            listen_event=mock.Mock(side_effect=self._se_listen_event),
+            fire_event=mock.Mock(side_effect=self._se_fire_event),
             listen_state=mock.Mock(side_effect=self._se_listen_state),
             notify=mock.Mock(),
             run_at=mock.Mock(),
@@ -50,7 +55,9 @@ class HassDriver:
 
         self._setup_active = False
         self._states: Dict[str, Dict[str, Any]] = defaultdict(lambda: {"state": None})
+        self._events: Dict[str, Any] = defaultdict(lambda: [])
         self._state_spys: Dict[Union[str, None], List[StateSpy]] = defaultdict(lambda: [])
+        self._event_spys: Dict[str, EventSpy] = defaultdict(lambda: [])
 
     def get_mock(self, meth: str) -> mock.Mock:
         """
@@ -124,6 +131,7 @@ class HassDriver:
             # Avoid triggering state changes during state setup phase
             trigger = not self._setup_active
 
+        # _se_set_state(entity_id, attribute)
         domain, _ = entity.split(".")
         state_entry = self._states[entity]
         prev_state = copy(state_entry)
@@ -177,7 +185,7 @@ class HassDriver:
         else:
             return matched_states
 
-    def get_number_of_callbacks(self, entity):
+    def get_number_of_state_callbacks(self, entity):
         if entity in self._state_spys.keys():
             return len(self._state_spys.get(entity))
         return 0
@@ -208,3 +216,16 @@ class HassDriver:
                     if not states:
                         del self._state_spys[key]
                     return
+
+    def _se_listen_event(self, callback, event_name) -> EventSpy:
+        spy = EventSpy(
+            callback=callback,
+            event_name=event_name,
+        )
+        self._event_spys[event_name].append(spy)
+        return spy
+
+    def _se_fire_event(self, event_name, **kwargs):
+        if event_name in self._event_spys:
+            spy = self._event_spys[event_name][0]
+            spy.callback(event_name=event_name, data=kwargs, kwargs=kwargs)
