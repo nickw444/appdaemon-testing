@@ -56,7 +56,9 @@ class HassDriver:
         self._setup_active = False
         self._states: Dict[str, Dict[str, Any]] = defaultdict(lambda: {"state": None})
         self._events: Dict[str, Any] = defaultdict(lambda: [])
-        self._state_spys: Dict[Union[str, None], List[StateSpy]] = defaultdict(lambda: [])
+        self._state_spys: Dict[Union[str, None], List[StateSpy]] = defaultdict(
+            lambda: []
+        )
         self._event_spys: Dict[str, EventSpy] = defaultdict(lambda: [])
         self._run_in_simulations = []
         self._clock_time = 0  # Simulated time in seconds
@@ -108,13 +110,17 @@ class HassDriver:
         yield None
         self._setup_active = False
 
-    def _se_set_state(self, entity_id: str, state, attribute_name="state", **kwargs: Optional[Any]):
+    def _se_set_state(
+        self, entity_id: str, state, attribute_name="state", **kwargs: Optional[Any]
+    ):
         state_entry = self._states[entity_id]
 
         # Update the state entry
         state_entry[attribute_name] = state
 
-    def set_state(self, entity, state, *, attribute_name="state", previous=None, trigger=None) -> None:
+    def set_state(
+        self, entity, state, *, attribute_name="state", previous=None, trigger=None
+    ) -> None:
         """
         Update/set state of an entity.
 
@@ -177,10 +183,14 @@ class HassDriver:
 
         # With matched states, map the provided attribute (if applicable)
         if attribute != "all":
-            matched_states = {eid: state.get(attribute) for eid, state in matched_states.items()}
+            matched_states = {
+                eid: state.get(attribute) for eid, state in matched_states.items()
+            }
 
         if default is not None:
-            matched_states = {eid: state or default for eid, state in matched_states.items()}
+            matched_states = {
+                eid: state or default for eid, state in matched_states.items()
+            }
 
         if fully_qualified:
             return matched_states[entity_id]
@@ -192,7 +202,9 @@ class HassDriver:
             return len(self._state_spys.get(entity))
         return 0
 
-    def _se_listen_state(self, callback, entity=None, attribute=None, new=None, old=None, **kwargs) -> StateSpy:
+    def _se_listen_state(
+        self, callback, entity=None, attribute=None, new=None, old=None, **kwargs
+    ) -> StateSpy:
         spy = StateSpy(
             callback=callback,
             attribute=attribute or "state",
@@ -201,13 +213,19 @@ class HassDriver:
             kwargs=kwargs,
         )
         # WARNING: This works only if function setting callback is called after setup.
-        # It may be required to defer initialize by setting initialize to False in fixture definition
-        # and calling <app>.initialize() after setup
+        # It may be required to defer initialize by setting initialize to False in fixture
+        #  definition and calling <app>.initialize() after setup
         self._state_spys[entity].append(spy)
         if "immediate" in spy.kwargs and spy.kwargs["immediate"] is True:
             state = self._states[entity][spy.attribute]
             if (spy.new is None) or (spy.new == state):
-                spy.callback(entity=entity, attribute="state", new=state, old=old, kwargs=spy.kwargs)
+                spy.callback(
+                    entity=entity,
+                    attribute="state",
+                    new=state,
+                    old=old,
+                    kwargs=spy.kwargs,
+                )
         return spy
 
     def _se_cancel_listen_state(self, handle):
@@ -241,10 +259,11 @@ class HassDriver:
     def _se_run_in(self, callback, delay, **kwargs):
         """
         Simulate an AppDaemon run_in call.
-        return handle
         """
         run_time = self._clock_time + delay
-        self._run_in_simulations.append({"callback": callback, "run_time": run_time, "kwargs": kwargs})
+        self._run_in_simulations.append(
+            {"callback": callback, "run_time": run_time, "kwargs": kwargs}
+        )
         return callback
 
     def get_run_in_simulations(self):
