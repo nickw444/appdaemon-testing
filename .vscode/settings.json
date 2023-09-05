@@ -1,0 +1,38 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+    },
+    "isort.args":["--profile", "black"],
+    "pylint.args": [
+        "--disable=C0114",
+        "--disable=C0115",
+        "--disable=C0116",
+        "--disable=C0411",
+        "--disable=E0401",
+        "--disable=E0611",
+        "--disable=R0913",
+        "--disable=W0105",
+        "--disable=W0201",
+        "--disable=W0613",
+        "--disable=W0718",
+        "--disable=W1514",
+        "--max-line-length=89"
+    ],
+    "files.autoSave": "off",
+    "black-formatter.args": [
+        "--line-length=89"
+    ],
+    "git-graph.commitDetailsView.location": "Docked to Bottom",
+    "python.testing.pytestArgs": [
+        "appdaemon"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "livePreview.openPreviewTarget": "External Browser",
+    "livePreview.serverRoot": "htmlcov",
+    "terminal.integrated.copyOnSelection": false
+}
