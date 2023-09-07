@@ -218,14 +218,14 @@ class HassDriver:
         )
         # WARNING: This works only if function setting callback is called after setup.
         # It may be required to defer initialize by setting initialize to False in fixture
-        #  definition and calling <app>.initialize() after setup
+        # definition and calling <app>.initialize() after setup
         self._state_spys[entity].append(spy)
         if "immediate" in spy.kwargs and spy.kwargs["immediate"] is True:
             state = self._states[entity][spy.attribute]
             if (spy.new is None) or (spy.new == state):
                 spy.callback(
                     entity=entity,
-                    attribute="state",
+                    attribute=attribute or "state",
                     new=state,
                     old=old,
                     kwargs=spy.kwargs,
@@ -266,7 +266,11 @@ class HassDriver:
         """
         run_time = self._clock_time + delay
         self._run_in_simulations.append(
-            {"callback": callback, "run_time": run_time, "kwargs": kwargs}
+            {
+                "callback": callback,
+                "run_time": run_time,
+                "kwargs": kwargs,
+            }
         )
         return callback
 

@@ -167,6 +167,48 @@ def test_listen_state_with_old(hass_driver):
     )
 
 
+def test_get_number_of_state_callback(hass_driver):
+    listen_state = hass_driver.get_mock("listen_state")
+    callback = mock.Mock()
+    assert hass_driver.get_number_of_state_callbacks("light") == 0
+    listen_state(callback, "light")
+    assert hass_driver.get_number_of_state_callbacks("light") == 1
+    listen_state(callback, "light", attribute="brightness")
+    assert hass_driver.get_number_of_state_callbacks("light") == 2
+
+
+def test_listen_state_immediate_is_true(hass_driver):
+    listen_state = hass_driver.get_mock("listen_state")
+
+    def callback(entity, attribute, new, old, **kwargs):
+        nonlocal called
+        called = True
+
+    called = False
+    listen_state(callback, "light")
+    assert not called
+
+    called = False
+    listen_state(callback, "light", immediate=True)
+    assert called
+
+    called = False
+    hass_driver._states["light"]["brightness"] = None
+    listen_state(callback, "light", attribute="brightness", immediate=True)
+    assert called
+
+
+def test_listen_state_cancel(hass_driver):
+    listen_state = hass_driver.get_mock("listen_state")
+    callback = mock.Mock()
+    assert hass_driver.get_number_of_state_callbacks("light") == 0
+    handler = listen_state(callback, "light")
+    assert hass_driver.get_number_of_state_callbacks("light") == 1
+    cancel_listen_state = hass_driver.get_mock("cancel_listen_state")
+    cancel_listen_state(handler)
+    assert hass_driver.get_number_of_state_callbacks("light") == 0
+
+
 @pytest.mark.usefixtures("hass_driver_with_initialized_states")
 def test_setup_does_not_trigger_spys(hass_driver):
     listen_state = hass_driver.get_mock("listen_state")
