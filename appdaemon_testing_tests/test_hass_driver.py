@@ -291,6 +291,31 @@ def test_fire_event(hass_driver, my_app: MyApp):
     assert called
 
 
+def test_run_in(hass_driver, my_app: MyApp):
+    hass_driver.inject_mocks()
+    my_app.initialize()
+
+    hass_driver.set_clock_time(0)
+
+    def callback(name, **kwargs):
+        nonlocal called
+        called = True
+
+    called = False
+    handler = my_app.run_in(callback, 10)
+
+    assert len(hass_driver.get_run_in_simulations()) == 1
+    assert hass_driver.get_run_in_simulations()[0] == handler
+
+    assert not called
+
+    hass_driver.advance_time(5)
+    assert not called
+
+    hass_driver.advance_time(5)
+    assert called
+
+
 @pytest.fixture
 def hass_driver() -> HassDriver:
     hass_driver = HassDriver()

@@ -26,6 +26,13 @@ class EventSpy:
     event_name: str
 
 
+@dataclass(frozen=True)
+class RunInSpy:
+    callback: Callable
+    run_time: int
+    kwargs: any
+
+
 class HassDriver:
     def __init__(self):
         self._mocks = dict(
@@ -265,14 +272,15 @@ class HassDriver:
         Simulate an AppDaemon run_in call.
         """
         run_time = self._clock_time + delay
-        self._run_in_simulations.append(
-            {
-                "callback": callback,
-                "run_time": run_time,
-                "kwargs": kwargs,
-            }
+
+        spy = RunInSpy(
+            callback=callback,
+            run_time=run_time,
+            kwargs=kwargs,
         )
-        return callback
+
+        self._run_in_simulations.append(spy)
+        return spy
 
     def get_run_in_simulations(self):
         """
@@ -288,11 +296,9 @@ class HassDriver:
 
         # Check for any run_in calls that should be triggered
         for sim in self._run_in_simulations:
-            if sim["run_time"] <= self._clock_time:
-                callback = sim["callback"]
-                kwargs = sim["kwargs"]
-                if callable(callback):
-                    callback(None, **kwargs)  # Call the callback immediately
+            if sim.run_time <= self._clock_time:
+                if callable(sim.callback):
+                    sim.callback(None, **sim.kwargs)  # Call the callback immediately
 
                 # Remove the triggered run_in simulation
                 self._run_in_simulations.remove(sim)
