@@ -76,48 +76,48 @@ def test_get_state_domain_with_default(hass_driver):
 @pytest.mark.usefixtures("hass_driver_with_initialized_states")
 def test_listen_state(hass_driver):
     listen_state = hass_driver.get_mock("listen_state")
-    handler1 = mock.Mock()
-    handler2 = mock.Mock()
-    listen_state(handler1, "light.1")
-    listen_state(handler2, "light.1")
+    callback1 = mock.Mock()
+    callback2 = mock.Mock()
+    listen_state(callback1, "light.1")
+    listen_state(callback2, "light.1")
 
-    assert handler1.call_count == 0
-    assert handler2.call_count == 0
+    assert callback1.call_count == 0
+    assert callback2.call_count == 0
 
     hass_driver.set_state("light.1", "off")
 
-    assert handler1.call_count == 0
-    assert handler2.call_count == 0
+    assert callback1.call_count == 0
+    assert callback2.call_count == 0
 
     hass_driver.set_state("light.1", "on")
 
-    handler1.assert_called_once_with("light.1", "state", "off", "on", {})
-    handler2.assert_called_once_with("light.1", "state", "off", "on", {})
+    callback1.assert_called_once_with("light.1", "state", "off", "on", {})
+    callback2.assert_called_once_with("light.1", "state", "off", "on", {})
 
 
 @pytest.mark.usefixtures("hass_driver_with_initialized_states")
 def test_listen_state_attribute(hass_driver):
     listen_state = hass_driver.get_mock("listen_state")
-    handler = mock.Mock()
-    listen_state(handler, "light.1", attribute="linkquality")
+    callback = mock.Mock()
+    listen_state(callback, "light.1", attribute="linkquality")
 
-    assert handler.call_count == 0
+    assert callback.call_count == 0
     hass_driver.set_state("light.1", "on")
-    assert handler.call_count == 0
+    assert callback.call_count == 0
 
     hass_driver.set_state("light.1", 50, attribute_name="linkquality")
-    handler.assert_called_once_with("light.1", "linkquality", 60, 50, {})
+    callback.assert_called_once_with("light.1", "linkquality", 60, 50, {})
 
 
 @pytest.mark.usefixtures("hass_driver_with_initialized_states")
 def test_listen_state_attribute_all(hass_driver):
     listen_state = hass_driver.get_mock("listen_state")
-    handler = mock.Mock()
-    listen_state(handler, "light.1", attribute="all")
+    callback = mock.Mock()
+    listen_state(callback, "light.1", attribute="all")
 
-    assert handler.call_count == 0
+    assert callback.call_count == 0
     hass_driver.set_state("light.1", 75, attribute_name="brightness")
-    handler.assert_called_once_with(
+    callback.assert_called_once_with(
         "light.1",
         None,
         {"state": "off", "linkquality": 60},
@@ -129,25 +129,25 @@ def test_listen_state_attribute_all(hass_driver):
 @pytest.mark.usefixtures("hass_driver_with_initialized_states")
 def test_listen_state_domain(hass_driver):
     listen_state = hass_driver.get_mock("listen_state")
-    handler = mock.Mock()
-    listen_state(handler, "light", attribute="brightness")
+    callback = mock.Mock()
+    listen_state(callback, "light", attribute="brightness")
 
-    assert handler.call_count == 0
+    assert callback.call_count == 0
     hass_driver.set_state("light.2", 75, attribute_name="brightness")
-    handler.assert_called_once_with("light.2", "brightness", 60, 75, {})
+    callback.assert_called_once_with("light.2", "brightness", 60, 75, {})
 
 
 @pytest.mark.usefixtures("hass_driver_with_initialized_states")
 def test_listen_state_with_new(hass_driver):
     listen_state = hass_driver.get_mock("listen_state")
-    handler = mock.Mock()
-    listen_state(handler, "media_player.smart_tv", attribute="source", new="Spotify")
+    callback = mock.Mock()
+    listen_state(callback, "media_player.smart_tv", attribute="source", new="Spotify")
 
     hass_driver.set_state("media_player.smart_tv", "YouTube", attribute_name="source")
-    assert handler.call_count == 0
+    assert callback.call_count == 0
 
     hass_driver.set_state("media_player.smart_tv", "Spotify", attribute_name="source")
-    handler.assert_called_once_with(
+    callback.assert_called_once_with(
         "media_player.smart_tv", "source", "YouTube", "Spotify", {}
     )
 
@@ -155,14 +155,14 @@ def test_listen_state_with_new(hass_driver):
 @pytest.mark.usefixtures("hass_driver_with_initialized_states")
 def test_listen_state_with_old(hass_driver):
     listen_state = hass_driver.get_mock("listen_state")
-    handler = mock.Mock()
-    listen_state(handler, "media_player.smart_tv", attribute="source", old="Spotify")
+    callback = mock.Mock()
+    listen_state(callback, "media_player.smart_tv", attribute="source", old="Spotify")
 
     hass_driver.set_state("media_player.smart_tv", "Spotify", attribute_name="source")
-    assert handler.call_count == 0
+    assert callback.call_count == 0
 
     hass_driver.set_state("media_player.smart_tv", "TV", attribute_name="source")
-    handler.assert_called_once_with(
+    callback.assert_called_once_with(
         "media_player.smart_tv", "source", "Spotify", "TV", {}
     )
 
@@ -170,18 +170,18 @@ def test_listen_state_with_old(hass_driver):
 @pytest.mark.usefixtures("hass_driver_with_initialized_states")
 def test_setup_does_not_trigger_spys(hass_driver):
     listen_state = hass_driver.get_mock("listen_state")
-    handler = mock.Mock()
-    listen_state(handler, "light")
-    listen_state(handler, "light.1", attribute="brightness")
+    callback = mock.Mock()
+    listen_state(callback, "light")
+    listen_state(callback, "light.1", attribute="brightness")
 
     with hass_driver.setup():
         hass_driver.set_state("light.1", "off")
         hass_driver.set_state("light.1", "on")
         hass_driver.set_state("light.1", 50, attribute_name="linkquality")
 
-    assert handler.call_count == 0
+    assert callback.call_count == 0
     hass_driver.set_state("light.1", "off")
-    assert handler.call_count == 1
+    assert callback.call_count == 1
 
 
 class MyApp(hass.Hass):
