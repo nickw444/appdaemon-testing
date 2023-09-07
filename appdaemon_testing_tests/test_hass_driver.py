@@ -234,6 +234,13 @@ def test_inject_mock_with_bad_name(hass_driver):
         hass_driver.inject_mocks()
 
 
+def test_listen_event(hass_driver):
+    listen_event = hass_driver.get_mock("listen_event")
+    callback = mock.Mock()
+    listen_event(callback, "my_event")
+    listen_event.assert_called_once_with(callback, "my_event")
+
+
 class MyApp(hass.Hass):
     def initialize(self):
         self.log("This is a log")
@@ -263,12 +270,25 @@ def test_set_state(hass_driver, my_app: MyApp):
         hass_driver.set_state("domain.sensor", state="my_state")
 
     my_app.initialize()
-
     assert hass_driver._states == {"domain.sensor": {"state": "my_state"}}
 
     my_app.set_state("domain.sensor", state="my_new_state")
-
     assert hass_driver._states == {"domain.sensor": {"state": "my_new_state"}}
+
+
+def test_fire_event(hass_driver, my_app: MyApp):
+    hass_driver.inject_mocks()
+    my_app.initialize()
+
+    def callback(event_name, data, kwargs):
+        nonlocal called
+        called = True
+
+    called = False
+    listen_event = hass_driver.get_mock("listen_event")
+    listen_event(callback, "my_event")
+    my_app.fire_event("my_event")
+    assert called
 
 
 @pytest.fixture
