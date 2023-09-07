@@ -184,6 +184,14 @@ def test_setup_does_not_trigger_spys(hass_driver):
     assert callback.call_count == 1
 
 
+def test_inject_mock_with_bad_name(hass_driver):
+    with pytest.raises(
+        AttributeError, match="('Attempt to mock non existing method: ', 'bad_name')"
+    ):
+        hass_driver._mocks["bad_name"] = lambda: None
+        hass_driver.inject_mocks()
+
+
 class MyApp(hass.Hass):
     def initialize(self):
         self.log("This is a log")

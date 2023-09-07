@@ -78,8 +78,12 @@ class HassDriver:
         implementations.
         """
         for meth_name, impl in self._mocks.items():
-            if getattr(hass.Hass, meth_name) is None:
-                raise AssertionError("Attempt to mock non existing method: ", meth_name)
+            try:
+                getattr(hass.Hass, meth_name)
+            except AttributeError as exception:
+                raise AttributeError(
+                    "Attempt to mock non existing method: ", meth_name
+                ) from exception
             _LOGGER.debug("Patching hass.Hass.%s", meth_name)
             setattr(hass.Hass, meth_name, impl)
 
