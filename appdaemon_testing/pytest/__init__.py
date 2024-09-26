@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Type, TypeVar, Callable
+from typing import Callable, Type, TypeVar
 from unittest import mock
 
 import appdaemon.plugins.hass.hassapi as hass
@@ -16,7 +16,7 @@ def hass_driver() -> HassDriver:
 
     This fixture takes care of ensuring AppDaemon base class methods are patched.
     """
-    hass_driver = HassDriver()
+    hass_driver = HassDriver()  # pylint: disable=W0621
     hass_driver.inject_mocks()
     return hass_driver
 
