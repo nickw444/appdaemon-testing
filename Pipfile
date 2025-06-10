@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 appdaemon = "*"
-appdaemon-testing = {editable = true,path = "."}
+appdaemon-testing = {editable = true,file = "."}
 black = "*"
 flake8 = "*"
 pdoc3 = "*"
@@ -14,7 +14,7 @@ pdoc3 = "*"
 [packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.12"
 
 [pipenv]
 allow_prereleases = true
